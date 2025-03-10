@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="ខ្មែរ">
+<head>
+<style>
+        img {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 100px;
+            height: auto;
+            opacity: 0.6;
+            z-index: 1;
+        }
+        #player {
+            position: absolute;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .jwplayer .jw-rightclick .jw-rightclick-list {
+            border-radius: 1px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+    </style>
+    <link href='https://res.cloudinary.com/dn6dgbjj5/raw/upload/v1729633183/JW%20player%20Code/Skin%20Netflix.css' rel='stylesheet'/>
+</head>
+<body>
+    <img src="https://i.imgur.com/umTyaSP.png" />
+    <script src='https://res.cloudinary.com/dn6dgbjj5/raw/upload/v1718201588/JW%20player%20Code/JW_player.js' type='text/javascript'></script>
+  <div id="player"></div>
+  <script>
+    // Initialize JWPlayer instance
+    const playerInstance = jwplayer("player").setup({
+      controls: true,
+      sharing: true,
+      displaytitle: false,
+      displaydescription: true,
+      abouttext:"Buy Me a Coffee",
+      aboutlink:"@tvpop.link",
+      skin: { name: "netflix" },
+      captions: {
+        color: "#FFF",
+        fontSize:16,
+        backgroundOpacity:100,
+        edgeStyle: "uniform"
+      },
+      playlist: [{
+        title: "TVPOP.link",
+        description: "ភាពយន្តនេះនាំមកជូនដោយ TVPOP.link",
+        image: "",
+        sources:
+        [
+          { file: "https://bigf.bigo.sg/asia_live/V4s7/05j8k0.mp4",label:"Auto",default: true },
+          { file: "", label: "4k" },
+          { file: "https://bigf.bigo.sg/asia_live/V4s7/05j8k0.mp4?dl=0",label:"1080p" },
+          { file: "https://bigf.bigo.sg/asia_live/V4s7/05j8k0.mp4",label:"720p" },
+          { file: "https://bigf.bigo.sg/asia_live/V4s7/05j8k0.mp4",label:"480p" }
+        ],
+        captions: [
+          { file: "https://res.cloudinary.com/do6y36zmq/raw/upload/v1689069099/khmer%20sub/The.Amityville.Horror.2005.720p.BluRay.x264-x0r.km_sw7ybh.srt", label: "ខ្មែរ", kind: "captions", default: true },
+          { file: "https://res.cloudinary.com/do6y36zmq/raw/upload/v1689069124/eng%20sub/The.Amityville.Horror.2005.720p.BluRay.x264-x0r_fntbhk.srt", label: "English", kind: "captions" }
+        ]
+      }],
+      advertising: { client: "vast" }
+    });
+    // Event listener for when the player is ready
+    playerInstance.on("ready", function () {
+      const buttonId = "download-video-button";
+      const iconPath = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTMgMTloMTh2Mkgzdi0yem0xMC01LjgyOEwxOS4wNzEgNy4xbDEuNDE0IDEuNDE0TDEyIDE3IDMuNTE1IDguNTE1IDQuOTI5IDcuMSAxMSAxMy4xN1YyaDJ2MTEuMTcyeiIgZmlsbD0icmdiYSgyNDcsMjQ3LDI0NywxKSIvPjwvc3ZnPg==";
+      const tooltipText = "Download";
+      // Function to handle video download
+      function buttonClickAction() {
+        const playlistItem = playerInstance.getPlaylistItem();
+        const anchor = document.createElement("a");
+        const fileUrl = playlistItem.file;
+        anchor.setAttribute("href", fileUrl);
+        const downloadName = playlistItem.file.split("/").pop();
+        anchor.setAttribute("download", downloadName);
+        anchor.style.display = "none";
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+      }
+      // Move the time slider inline with other controls
+      const playerContainer = playerInstance.getContainer();
+      const buttonContainer = playerContainer.querySelector(".jw-button-container");
+      const spacer = buttonContainer.querySelector(".jw-spacer");
+      const timeSlider = playerContainer.querySelector(".jw-slider-time");
+      // Create the Forward 10 seconds button
+      const rewindContainer = playerContainer.querySelector(".jw-display-icon-rewind");
+      const forwardContainer = rewindContainer.cloneNode(true);
+      const forwardDisplayButton = forwardContainer.querySelector(".jw-icon-rewind");
+      forwardDisplayButton.style.transform = "scaleX(-1)";
+      forwardDisplayButton.ariaLabel = "Forward 10 Seconds";
+      // Insert forward button
+      const nextContainer = playerContainer.querySelector(".jw-display-icon-next");
+      nextContainer.parentNode.insertBefore(forwardContainer, nextContainer);
+      // Hide next button
+      playerContainer.querySelector(".jw-display-icon-next").style.display = "none";
+      // Add forward control bar button
+      const rewindControlBarButton = buttonContainer.querySelector(".jw-icon-rewind");
+      const forwardControlBarButton = rewindControlBarButton.cloneNode(true);
+      forwardControlBarButton.style.transform = "scaleX(-1)";
+      forwardControlBarButton.ariaLabel = "Forward 10 Seconds";
+      rewindControlBarButton.parentNode.insertBefore(forwardControlBarButton, rewindControlBarButton.nextElementSibling);
+      // Add click actions for forward buttons
+      [forwardDisplayButton, forwardControlBarButton].forEach((button) => {
+      button.onclick = () => { playerInstance.seek(playerInstance.getPosition() + 10);
+        };
+      });
+    });
+  </script>
+</body>
+</html>
