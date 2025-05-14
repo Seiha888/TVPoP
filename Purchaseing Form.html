@@ -1,0 +1,201 @@
+<!-- Purchase Form Start -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase Form</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: sans-serif;
+      background-image: url('https://i.imgur.com/JBI9r9E.jpeg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-container::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+      border-radius: 10px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-container label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .form-container input[type="radio"] {
+      transform: scale(0.6);
+      margin-right: 8px;
+    }
+
+    .payment-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .payment-options label {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .qr-code {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .qr-code img {
+      width: 106px;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #fff;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #00aaff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .copy-note {
+      font-size: 12px;
+      color: #ddd;
+      margin-top: -8px;
+      margin-bottom: 10px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro&display=swap" rel="stylesheet">
+<style>
+  .center-text {
+    text-align: center;
+    font-family: "Kantumruy Pro", sans-serif;
+    font-size: 18px; color: gold;
+  }
+</style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Purchase Form</h2>
+     <p class="center-text">ចង់ទិញអ្វីក៏បានទំនាក់ទំនងមកបានភ្លាមៗ</p>
+    <form id="purchaseForm" onsubmit="return sendToTelegram();">
+
+      <label>Buyer Name:</label>
+      <input type="text" id="name" required />
+
+      <label>Product Name:</label>
+      <input type="text" id="product" required />
+
+      <label>Quantity:</label>
+      <input type="number" id="quantity" required />
+
+      <label>Purchase Date:</label>
+      <input type="date" id="date" required />
+
+      <label>Payment Method:</label>
+      <div class="payment-options">
+        <label><input type="radio" name="payment" value="ABA" required /> ABA</label>
+        <label><input type="radio" name="payment" value="Wing" /> Wing</label>
+        <label><input type="radio" name="payment" value="TrueMoney" /> TrueMoney</label>
+        <label><input type="radio" name="payment" value="acledabank" /> Acledabank</label>
+      </div>
+
+      <label>Acc: Transfer to ABA</label>
+      <input type="text" id="aba" value="000 280 631" readonly onclick="copyABA()" style="background:#f9f9f9;border:1px solid #ddd;cursor:pointer;" />
+      <div class="copy-note">Click to copy</div>
+
+      <div class="qr-code">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGJHJXyxEnbDeWr29mwrhVzNUbMRhWSoWw-k6k9eFyVINdE93nGZIWcHZWvM-2pjlNiy6orI0IbvjsCeatkNran-2n5B1SWSgU2_Be9bmrlpjiKJsf1-wbiVEkQzQwzrxXPiKowJl31TjEEXf2mijnZFC7ozjkLgDE6-UODFVqbdLjseDOleULBYTG8N4/s349/SeihaQR%20Payment.png" alt="ABA QR Code">
+        <p style="font-size:14px;margin-top:5px;">Scan to pay via ABA</p>
+      </div>
+
+      <button type="submit">Send to Telegram</button>
+    </form>
+  </div>
+
+  <script>
+    function copyABA() {
+      const abaInput = document.getElementById("aba");
+      abaInput.select();
+      abaInput.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("ABA number copied to clipboard!");
+    }
+
+    function sendToTelegram() {
+      const name = document.getElementById("name").value;
+      const product = document.getElementById("product").value;
+      const quantity = document.getElementById("quantity").value;
+      const date = document.getElementById("date").value;
+      const aba = document.getElementById("aba").value;
+
+      const paymentRadios = document.getElementsByName("payment");
+      let payment = "";
+      for (const radio of paymentRadios) {
+        if (radio.checked) {
+          payment = radio.value;
+          break;
+        }
+      }
+
+      const message =
+        `New Purchase Request\n\n` +
+        `Name: ${name}\n` +
+        `Product: ${product}\n` +
+        `Quantity: ${quantity}\n` +
+        `Date: ${date}\n` +
+        `Payment Method: ${payment}\n` +
+        `ABA Account: ${aba}`;
+
+      const telegramUrl = "tg://resolve?domain=W88pix&text=" + encodeURIComponent(message);
+      window.open(telegramUrl, "_blank");
+
+      return false;
+    }
+  </script>
+
+</body>
+</html>
+<!-- Purchase Form End -->
